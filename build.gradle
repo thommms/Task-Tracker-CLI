@@ -1,0 +1,39 @@
+// Apply the Java plugin to add support for Java
+plugins {
+    id 'java'
+    id 'application' // if you're using application plugin
+}
+group 'com.tasktracker'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()  // This allows us to fetch dependencies from Maven Central
+}
+
+// Define dependencies for the project
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'  // Adjust the version if needed
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    // You can add other dependencies here as required by your project
+    testImplementation 'junit:junit:4.13.2' // JUnit for testing
+}
+application {
+    mainClass = 'com.tasktracker.TaskCLI'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.tasktracker.TaskCLI'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Add this line
+    archiveFileName = "task-tracker.jar" // Rename the JAR file
+
+}
